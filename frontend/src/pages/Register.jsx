@@ -1,27 +1,51 @@
+/**
+ * Register Page Component
+ * Allows new users to create an account
+ * by entering username, email, and constellation pattern
+ */
+
 import { useState } from "react";
 import axios from "axios";
 import StarMap from "../components/StarMap";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  // Form state management
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [sequence, setSequence] = useState([]);
   const [message, setMessage] = useState("");
+
+  // React Router navigation
   const navigate = useNavigate();
 
+  /**
+   * Handle registration form submission
+   * Validates that at least 4 stars are selected
+   * Sends registration request to backend
+   * Redirects to login on success
+   */
   async function handleSubmit() {
-    if (sequence.length < 4)
+    // Validate minimum star selection
+    if (sequence.length < 4) {
       return setMessage("Please select at least 4 stars");
+    }
+
     try {
+      // Send registration request to backend
       await axios.post("http://localhost:5000/api/auth/register", {
         username,
         email,
-        sequence,
+        sequence, // Array of selected star indices
       });
+
+      // Show success message
       setMessage("Registered! Redirecting to login...");
+
+      // Redirect to login page after 1.5 seconds
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
+      // Display error message from server
       setMessage(err.response?.data?.message || "Error");
     }
   }

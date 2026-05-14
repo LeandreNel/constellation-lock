@@ -1,26 +1,52 @@
+/**
+ * Login Page Component
+ * Allows existing users to authenticate
+ * by entering email and recreating their constellation pattern
+ */
+
 import { useState } from "react";
 import axios from "axios";
 import StarMap from "../components/StarMap";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  // Form state management
   const [email, setEmail] = useState("");
   const [sequence, setSequence] = useState([]);
   const [message, setMessage] = useState("");
+
+  // React Router navigation
   const navigate = useNavigate();
 
+  /**
+   * Handle login form submission
+   * Validates that at least 4 stars are selected
+   * Sends login request to backend
+   * Stores JWT token and redirects to dashboard on success
+   */
   async function handleSubmit() {
-    if (sequence.length < 4)
+    // Validate minimum star selection
+    if (sequence.length < 4) {
       return setMessage("Please select at least 4 stars");
+    }
+
     try {
+      // Send login request to backend
       const res = await axios.post("http://localhost:5000/api/auth/login", {
         email,
-        sequence,
+        sequence, // Array of selected star indices
       });
+
+      // Store JWT token in localStorage for future requests
       localStorage.setItem("token", res.data.token);
+
+      // Show welcome message
       setMessage(`Welcome back, ${res.data.username}!`);
+
+      // Redirect to dashboard after 1.5 seconds
       setTimeout(() => navigate("/dashboard"), 1500);
     } catch (err) {
+      // Display error message from server
       setMessage(err.response?.data?.message || "Error");
     }
   }
