@@ -6,7 +6,7 @@ A creative authentication system built with the MERN stack, where users register
 
 ## What is Constellation Lock?
 
-Instead of a traditional password, users click on stars in a specific sequence on an interactive star map to create their "constellation key". This pattern is hashed and stored securely — just like a password — but the interaction is entirely visual and spatial.
+Instead of a traditional password, users click on stars in a specific sequence on an interactive star map to create their "constellation key". This pattern is hashed and stored securely (just like a password) but the interaction is entirely visual and spatial.
 
 ---
 
