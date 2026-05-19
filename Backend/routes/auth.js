@@ -1,12 +1,4 @@
-/**
- * ============================================
- * AUTHENTICATION ROUTES
- * ============================================
- * Handles user registration and login
- * Uses constellation (star) patterns as passwords
- * Passwords are hashed with bcrypt for security
- */
-
+// User authentication endpoints (register and login)
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -14,39 +6,22 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-/**
- * POST /api/auth/register
- * Creates a new user account with a constellation pattern
- *
- * Request body:
- * - username (string): Unique username
- * - email (string): Unique email address
- * - sequence (array): Star indices [3, 7, 1, 12, 5]
- *
- * Response:
- * - 201: User registered successfully
- * - 400: User already exists with that email
- * - 500: Server error
- */
+// Register - creates new user with hashed constellation pattern
 router.post("/register", async (req, res) => {
   const { username, email, sequence } = req.body;
-
   try {
-    // Check if user with this email already exists
+    // Check for existing email
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "Email already registered" });
     }
 
-    // Convert star sequence array to string format
-    // [3, 7, 1, 12, 5] -> "3-7-1-12-5"
+    // Hash constellation pattern: convert array to string, then bcrypt hash
     const sequenceString = sequence.join("-");
-
-    // Hash the sequence with bcrypt (salt rounds: 12)
     const constellationHash = await bcrypt.hash(sequenceString, 12);
 
-    // Create new user in database
-    const user = await User.create({
+    // Create user in database
+    await User.create({
       username,
       email,
       constellationHash,
@@ -58,23 +33,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/**
- * POST /api/auth/login
- * Authenticates user by verifying their constellation pattern
- *
- * Request body:
- * - email (string): User's email
- * - sequence (array): Star indices [3, 7, 1, 12, 5]
- *
- * Response:
- * - 200: { token: JWT_TOKEN, username: string }
- * - 404: User not found
- * - 401: Incorrect constellation pattern
- * - 500: Server error
- */
+// Login - verifies constellation pattern and returns JWT token
 router.post("/login", async (req, res) => {
   const { email, sequence } = req.body;
-
   try {
     // Find user by email
     const user = await User.findOne({ email });
@@ -82,10 +43,8 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Convert input sequence to string format
+    // Compare provided pattern with stored hash
     const sequenceString = sequence.join("-");
-
-    // Compare provided sequence with stored hash
     const isMatch = await bcrypt.compare(
       sequenceString,
       user.constellationHash,
@@ -95,14 +54,13 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Incorrect constellation" });
     }
 
-    // Generate JWT token (expires in 1 day)
+    // Generate JWT token (1 day expiry)
     const token = jwt.sign(
       { id: user._id, username: user.username },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
     );
 
-    // Return token and username
     res.json({ token, username: user.username });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
