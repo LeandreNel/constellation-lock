@@ -26,7 +26,7 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.35;
+  opacity: 0.8;
   animation: float linear infinite;
 }
 
