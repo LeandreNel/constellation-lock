@@ -11,7 +11,7 @@ function Dashboard() {
         style={{ textAlign: "center", animation: "fadeInDown 0.8s ease-out" }}
       >
         <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>
-          🌌 Welcome, Star Navigator!
+          Welcome, Star Navigator!
         </h1>
         <p
           style={{ fontSize: "1.1rem", color: "#aad4ff", marginBottom: "3rem" }}

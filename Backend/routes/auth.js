@@ -29,6 +29,12 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern)[0];
+      return res
+        .status(400)
+        .json({ message: `That ${field} is already taken.` });
+    }
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
