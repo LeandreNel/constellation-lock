@@ -1,4 +1,4 @@
-# Constellation Lock
+[Live Demo Video.txt](https://github.com/user-attachments/files/28142971/Live.Demo.Video.txt)# Constellation Lock
 
 A creative authentication system built with the MERN stack, where users register and log in by drawing a unique star constellation pattern instead of typing a password.
 
@@ -101,6 +101,10 @@ npm run dev
 Go to [http://localhost:5173](http://localhost:5173)
 
 ---
+
+### 5. Watch Live Demo
+Click to watch [Uploahttps://www.loom.com/share/cb4c4fe0a33e46f788a696c58572e12cding Live Demo Video.txt…]()
+
 
 ## Security
 
